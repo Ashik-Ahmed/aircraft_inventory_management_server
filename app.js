@@ -14,5 +14,10 @@ app.get('/', (req, res) => {
     console.log('api hit');
 })
 
+const aircraftRoute = require('./routes/Aircraft.route');
+
+
+app.use('/api/v1/aircraft', aircraftRoute);
+
 
 module.exports = app;
