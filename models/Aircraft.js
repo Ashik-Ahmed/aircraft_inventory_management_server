@@ -3,15 +3,18 @@ const { default: mongoose } = require("mongoose");
 const aircraftSchema = mongoose.Schema({
     aircraftName: {
         type: String,
-        required: true
+        required: [true, 'Aircraft name is required.'],
+        unique: true,
+
     },
     aircraftId: {
         type: String,
-        required: true
+        required: [true, 'Aircraft Id is required.'],
+        unique: true
     },
-    Image: {
+    image: {
         type: String,
-        required: true
+        required: [true, 'Image is required.'],
     },
     stocks: [
         {
