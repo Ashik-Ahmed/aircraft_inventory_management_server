@@ -1,5 +1,5 @@
 const express = require("express");
-const { createNewAircraft, getAllAircraft } = require("../controllers/Aircraft.controller");
+const { createNewAircraft, getAllAircraft, getAircraftById, updateAircraftById } = require("../controllers/Aircraft.controller");
 
 const router = express.Router();
 
@@ -8,8 +8,8 @@ router.route('/')
     .post(createNewAircraft);
 
 router.route('/:id')
-// .get(getAircraftById)
-// .patch(updateAircraftById)
+    .get(getAircraftById)
+    .patch(updateAircraftById)
 
 
 module.exports = router;
