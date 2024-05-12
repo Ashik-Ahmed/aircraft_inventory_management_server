@@ -10,3 +10,4 @@ exports.getAllStockService = async () => {
     const result = await Stock.find({});
     return result;
 }
+

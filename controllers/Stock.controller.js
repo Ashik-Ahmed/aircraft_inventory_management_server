@@ -5,17 +5,13 @@ exports.createNewStock = async (req, res) => {
     try {
         const data = req.body;
         const result = await createNewStockService(data);
-
         if (result?._id) {
 
             const pushToAircraft = await Aircraft.findByIdAndUpdate(data.aircraftId, {
                 $push: {
-                    stock: result._id
+                    stocks: result?._id
                 }
             })
-            console.log("new stock");
-            console.log(pushToAircraft);
-            console.log(result);
 
             res.status(200).json({
                 status: "Success",
