@@ -15,9 +15,11 @@ app.get('/', (req, res) => {
 })
 
 const aircraftRoute = require('./routes/Aircraft.route');
+const stockRoute = require('./routes/Stock.route');
 
 
 app.use('/api/v1/aircraft', aircraftRoute);
+app.use('/api/v1/stock', stockRoute);
 
 
 module.exports = app;
