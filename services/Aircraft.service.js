@@ -23,6 +23,6 @@ exports.updateAircraftByIdService = async (id, data) => {
 }
 
 exports.getStockByAircraftIdService = async (id) => {
-    const result = await Aircraft.find({ _id: id }, { aircraftName: 1 }).populate("stocks");
+    const result = await Aircraft.find({ _id: id }, { stocks: 1, aircraftName: 1 }).populate("stocks");
     return result;
 }

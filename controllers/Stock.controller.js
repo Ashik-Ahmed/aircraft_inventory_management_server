@@ -1,5 +1,5 @@
 const Aircraft = require("../models/Aircraft");
-const { createNewStockService, getAllStockService } = require("../services/Stock.service");
+const { createNewStockService, getAllStockService, deleteStockByIdService } = require("../services/Stock.service");
 
 exports.createNewStock = async (req, res) => {
     try {
@@ -46,6 +46,36 @@ exports.getAllStock = async (req, res) => {
             res.status(400).json({
                 status: "Failed",
                 error: "No Stock Found"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
+        })
+    }
+}
+
+exports.deleteStockById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await deleteStockByIdService(id);
+        console.log(result);
+        if (result) {
+            const removeFromAircraft = await Aircraft.findByIdAndUpdate(result?.aircraftId, {
+                $pull: {
+                    stocks: id
+                }
+            })
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Failed to delete stock"
             })
         }
     } catch (error) {

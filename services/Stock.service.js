@@ -11,3 +11,7 @@ exports.getAllStockService = async () => {
     return result;
 }
 
+exports.deleteStockByIdService = async (id) => {
+    const result = await Stock.findByIdAndDelete(id);
+    return result;
+}
