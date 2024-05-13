@@ -15,3 +15,9 @@ exports.deleteStockByIdService = async (id) => {
     const result = await Stock.findByIdAndDelete(id);
     return result;
 }
+
+exports.getStockByIdService = async (id) => {
+    // console.log(id);
+    const result = await Stock.findById(id).populate("aircraftId", "aircraftName").populate("stockHistory");
+    return result;
+}
