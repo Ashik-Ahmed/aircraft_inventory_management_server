@@ -19,9 +19,10 @@ const stockHistorySchema = mongoose.Schema({
     },
     expiryDate: {
         type: Date,
-        required: [true, 'Expiry date missing']
     },
-    remarks: String
+    remarks: {
+        type: String,
+    }
 },
     {
         timestamps: true

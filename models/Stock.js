@@ -24,6 +24,9 @@ const stockSchema = mongoose.Schema({
         required: [true, 'Nomenclature is required.'],
         unique: true
     },
+    issuedAt: {
+        type: Date,
+    },
     image: {
         type: String,
     },
