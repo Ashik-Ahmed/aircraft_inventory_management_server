@@ -14,36 +14,8 @@ exports.getAllAircraftService = async () => {
 }
 
 exports.getAricraftByIdService = async (id) => {
-    // const result = await Aircraft.findById(id);
-    // return result;
-    console.log(id);
-    const result = await Aircraft.aggregate([
-        // Match the specific stock by its id
-        { $match: { _id: new mongoose.Types.ObjectId(id) } },
-
-        // Populate the stocks field
-        {
-            $lookup: {
-                from: 'stocks', // the collection name for stockHistory
-                localField: 'stocks', // field in the stock model
-                foreignField: '_id', // field in the stockHistory collection
-                as: 'stocks' // output array field
-            },
-        },
-        // Unwind the stocks array to process each stock document
-        { $unwind: '$stocks' },
-
-        // Further $lookup to populate stockHistory for each stock
-        {
-            $lookup: {
-                from: 'StockHistory', // Assuming this is the correct collection name for the StockHistory model
-                localField: 'stocks.stockHistory', // Field in the unwound stock document
-                foreignField: '_id', // Field in the StockHistory collection that matches the reference
-                as: 'stocks.stockHistory' // The array to populate with the matched documents
-            }
-        },
-    ])
-
+    const result = await Aircraft.findById(id);
+    return result;
     return result;
 }
 
@@ -53,6 +25,71 @@ exports.updateAircraftByIdService = async (id, data) => {
 }
 
 exports.getStockByAircraftIdService = async (id) => {
-    const result = await Aircraft.find({ _id: id }, { stocks: 1, aircraftName: 1 }).populate("stocks");
+    // const result = await Aircraft.find({ _id: id }, { stocks: 1, aircraftName: 1 }).populate("stocks");
+    // return result;
+    // console.log(id);
+    const result = await Aircraft.aggregate([
+        // Match the specific stock by its id
+        { $match: { _id: new mongoose.Types.ObjectId(id) } },
+
+        // Populate the stocks field
+        {
+            $lookup: {
+                from: 'stocks', // The 'stocks' collection
+                localField: 'stocks', // Field in Aircraft schema
+                foreignField: '_id', // Field in the Stock schema
+                as: 'stocks' // Alias for the populated data
+            }
+        },
+        // Deconstruct 'stocks' array
+        { $unwind: '$stocks' },
+        // Second lookup to populate 'stockHistory' for each stock
+        {
+            $lookup: {
+                from: 'stockhistories', // The 'stockhistories' collection, collection names are usually plural
+                localField: 'stocks.stockHistory', // Path to stockHistory from deconstructed stock
+                foreignField: '_id', // Field in the StockHistory schema
+                as: 'stocks.stockHistory' // Alias for the populated data
+            }
+        },
+        // Add fields to calculate 'quantity'
+        {
+            $addFields: {
+                'stocks.quantity': {
+                    $reduce: {
+                        input: '$stocks.stockHistory',
+                        initialValue: 0,
+                        in: {
+                            $cond: {
+                                if: { $eq: ['$$this.actionStatus', 'Received'] },
+                                then: { $add: ['$$value', '$$this.quantity'] },
+                                else: { $subtract: ['$$value', '$$this.quantity'] }
+                            }
+                        }
+                    }
+                },
+                'stocks.latestExpiry': {
+                    $min: '$stocks.stockHistory.expiryDate'
+                }
+            }
+        },
+        // Project to exclude the 'stockHistory' field
+        // {
+        //     $project: {
+        //         'stocks.stockHistory': 0
+        //     }
+        // },
+        // Group to reconstruct the 'stocks' array
+        {
+            $group: {
+                _id: '$_id',
+                aircraftName: { $first: '$aircraftName' },
+                aircraftId: { $first: '$aircraftId' },
+                image: { $first: '$image' },
+                stocks: { $push: '$stocks' } // Reconstructed stocks array with populated stockHistory
+            }
+        }
+    ]);
+
     return result;
 }

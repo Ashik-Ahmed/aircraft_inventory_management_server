@@ -116,7 +116,7 @@ exports.getStockByAircraftId = async (req, res) => {
         else {
             res.status(400).json({
                 status: "Failed",
-                error: "No Stock Found"
+                error: "No Data Found"
             })
         }
     } catch (error) {
