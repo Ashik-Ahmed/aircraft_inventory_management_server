@@ -6,8 +6,3 @@ exports.createStockHistoryService = async (data) => {
     console.log("creating stock history", result);
     return result;
 }
-
-exports.getStockHistoryByStockIdService = async (id) => {
-    const result = await Stock.find({ _id: id }, { stockHistory: 1 });
-    return result;
-}

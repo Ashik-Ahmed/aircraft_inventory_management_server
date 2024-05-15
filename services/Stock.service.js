@@ -20,4 +20,10 @@ exports.getStockByIdService = async (id) => {
     // console.log(id);
     const result = await Stock.findById(id).populate("aircraftId", "aircraftName").populate("stockHistory");
     return result;
+
+}
+
+exports.getStockHistoryByStockIdService = async (id) => {
+    const result = await Stock.find({ _id: id }, { stockHistory: 1 });
+    return result;
 }

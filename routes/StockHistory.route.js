@@ -1,5 +1,5 @@
 const express = require("express");
-const { createStockHistory, getStockHistoryByStockId } = require("../controllers/StockHistory.controller");
+const { createStockHistory } = require("../controllers/StockHistory.controller");
 
 
 const router = express.Router()
@@ -7,8 +7,8 @@ const router = express.Router()
 router.route('/')
     .post(createStockHistory)
 
-router.route('/:stockId')
-    .get(getStockHistoryByStockId)
+// router.route('/:stockId')
+//     .get(getStockHistoryByStockId)
 
 
 

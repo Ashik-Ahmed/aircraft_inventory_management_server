@@ -1,16 +1,16 @@
 const Stock = require("../models/Stock");
-const { createStockHistoryService, getStockHistoryByStockIdService } = require("../services/StockHistory.service")
+const { createStockHistoryService } = require("../services/StockHistory.service")
 
 exports.createStockHistory = async (req, res) => {
     try {
         const stockHistory = req.body;
-        const { stockId, ...historyData } = stockHistory;
-        console.log(historyData);
-        const result = await createStockHistoryService(historyData);
+        // const { stockId, ...historyData } = stockHistory;
+        const result = await createStockHistoryService(stockHistory);
+        console.log(stockHistory);
 
         if (result?._id) {
 
-            const pushToStock = await Stock.findByIdAndUpdate(stockId, {
+            const pushToStock = await Stock.findByIdAndUpdate(stockHistory?.stockId, {
                 $push: {
                     stockHistory: result?._id
                 }
@@ -34,31 +34,4 @@ exports.createStockHistory = async (req, res) => {
         })
     }
 
-}
-
-exports.getStockHistoryByStockId = async (req, res) => {
-    try {
-        const stockId = req.params.stockId;
-        console.log(stockId);
-        const stockHistory = await getStockHistoryByStockIdService(stockId);
-
-        if (stockHistory) {
-            res.status(200).json({
-                status: "Success",
-                data: stockHistory
-            })
-        }
-        else {
-            res.status(400).json({
-                status: "Failed",
-                error: "No Stock History Found"
-            })
-        }
-
-    } catch (error) {
-        res.status(500).json({
-            status: "Failed",
-            error: error.message
-        })
-    }
 }
