@@ -1,5 +1,5 @@
 const Aircraft = require("../models/Aircraft");
-const { createNewStockService, getAllStockService, deleteStockByIdService, getStockByIdService, getStockHistoryByStockIdService } = require("../services/Stock.service");
+const { createNewStockService, getAllStockService, deleteStockByIdService, getStockByIdService, getStockHistoryByStockIdService, updateStockByIdService } = require("../services/Stock.service");
 
 exports.createNewStock = async (req, res) => {
     try {
@@ -101,6 +101,33 @@ exports.getStockHistoryByStockId = async (req, res) => {
             })
         }
 
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
+        })
+    }
+}
+
+exports.updateStockById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        console.log(id, data);
+        const result = await updateStockByIdService(id, data);
+        // console.log(result);
+        if (result) {
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Failed to update stock"
+            })
+        }
     } catch (error) {
         res.status(500).json({
             status: "Failed",

@@ -37,3 +37,8 @@ exports.getStockHistoryByStockIdService = async (id) => {
     const result = await Stock.find({ _id: id }, { stockHistory: 1 });
     return result;
 }
+
+exports.updateStockByIdService = async (id, data) => {
+    const result = await Stock.findByIdAndUpdate(id, data);
+    return result;
+}
