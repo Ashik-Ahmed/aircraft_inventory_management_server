@@ -41,8 +41,8 @@ exports.getStockByAircraftIdService = async (id) => {
                 as: 'stocks' // Alias for the populated data
             }
         },
-        // Deconstruct 'stocks' array
-        { $unwind: '$stocks' },
+        // Use $unwind with 'preserveNullAndEmptyArrays' option set to true
+        { $unwind: { path: '$stocks', preserveNullAndEmptyArrays: true } },
         // Second lookup to populate 'stockHistory' for each stock
         {
             $lookup: {
@@ -74,11 +74,11 @@ exports.getStockByAircraftIdService = async (id) => {
             }
         },
         // Project to exclude the 'stockHistory' field
-        // {
-        //     $project: {
-        //         'stocks.stockHistory': 0
-        //     }
-        // },
+        {
+            $project: {
+                'stocks.stockHistory': 0
+            }
+        },
         // Group to reconstruct the 'stocks' array
         {
             $group: {
@@ -86,10 +86,19 @@ exports.getStockByAircraftIdService = async (id) => {
                 aircraftName: { $first: '$aircraftName' },
                 aircraftId: { $first: '$aircraftId' },
                 image: { $first: '$image' },
-                stocks: { $push: '$stocks' } // Reconstructed stocks array with populated stockHistory
+                // Handle the case where 'stocks' might be null after $unwind
+                stocks: {
+                    $push: {
+                        $cond: {
+                            if: '$stocks.nomenclature',
+                            then: '$stocks',
+                            else: '$$REMOVE'
+                        }
+                    }
+                }
             }
         }
     ]);
-
+    console.log("stocks: ", result);
     return result;
 }
