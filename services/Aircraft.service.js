@@ -16,7 +16,6 @@ exports.getAllAircraftService = async () => {
 exports.getAricraftByIdService = async (id) => {
     const result = await Aircraft.findById(id);
     return result;
-    return result;
 }
 
 exports.updateAircraftByIdService = async (id, data) => {

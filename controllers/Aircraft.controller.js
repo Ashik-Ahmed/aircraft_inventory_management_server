@@ -30,7 +30,7 @@ exports.createNewAircraft = async (req, res) => {
 exports.getAllAircraft = async (req, res) => {
     try {
         const result = await getAllAircraftService();
-        console.log(result);
+        // console.log(result);
         if (result) {
             res.status(200).json({
                 status: "Success",
@@ -55,7 +55,7 @@ exports.getAircraftById = async (req, res) => {
     try {
         const id = req.params.id;
         const result = await getAricraftByIdService(id);
-        console.log(result);
+        // console.log(result);
         if (result) {
             res.status(200).json({
                 status: "Success",

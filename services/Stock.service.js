@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Stock = require("../models/Stock");
 const StockHistory = require("../models/StockHistory");
 
@@ -7,8 +8,26 @@ exports.createNewStockService = async (data) => {
     return result;
 }
 
-exports.getAllStockService = async () => {
+exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
+
+    let matchExpiryCondition = {}; // Default to no additional match condition for 'All'
+
+    // Get today's date at midnight for comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (expiryFilter === 'Expired') {
+        matchExpiryCondition = { 'stockHistory.expiryDate': { $lt: today } };
+    } else if (expiryFilter === 'Not Expired') {
+        matchExpiryCondition = { 'stockHistory.expiryDate': { $gte: today } };
+    }
+
     const result = await Stock.aggregate([
+        {
+            $match: aircraftId && mongoose.Types.ObjectId.isValid(aircraftId)
+                ? { aircraftId: new mongoose.Types.ObjectId(aircraftId) }
+                : {}
+        },
         {
             $project: {
                 stockHistory: 1,
@@ -31,6 +50,9 @@ exports.getAllStockService = async () => {
                 path: '$stockHistory',
                 preserveNullAndEmptyArrays: true
             }
+        },
+        {
+            $match: matchExpiryCondition
         },
         {
             $project: {

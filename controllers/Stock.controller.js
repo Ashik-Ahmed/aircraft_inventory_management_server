@@ -1,5 +1,5 @@
 const Aircraft = require("../models/Aircraft");
-const { createNewStockService, getAllStockService, deleteStockByIdService, getStockByIdService, getStockHistoryByStockIdService, updateStockByIdService } = require("../services/Stock.service");
+const { createNewStockService, deleteStockByIdService, getStockByIdService, getStockHistoryByStockIdService, updateStockByIdService, getAllStockSReportervice } = require("../services/Stock.service");
 
 exports.createNewStock = async (req, res) => {
     try {
@@ -32,9 +32,12 @@ exports.createNewStock = async (req, res) => {
     }
 }
 
-exports.getAllStock = async (req, res) => {
+exports.getAllStockReport = async (req, res) => {
     try {
-        const result = await getAllStockService();
+        const aircraftId = req.query.aircraftId;
+        const expiryFilter = req.query.expiryFilter;
+        // console.log(expiryFilter);
+        const result = await getAllStockSReportervice(aircraftId, expiryFilter);
         // console.log(result);
         if (result) {
             res.status(200).json({

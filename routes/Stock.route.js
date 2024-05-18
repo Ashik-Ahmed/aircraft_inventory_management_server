@@ -1,5 +1,5 @@
 const express = require("express");
-const { createNewStock, getAllStock, deleteStockById, getStockById, getStockHistoryByStockId, updateStockById } = require("../controllers/Stock.controller");
+const { createNewStock, deleteStockById, getStockById, getStockHistoryByStockId, updateStockById, getAllStockReport } = require("../controllers/Stock.controller");
 
 
 const router = express.Router();
@@ -9,7 +9,7 @@ router.route('/stockHistory/:stockId')
 
 router.route('/')
     .post(createNewStock)
-    .get(getAllStock)
+    .get(getAllStockReport)
 
 router.route('/:id')
     .get(getStockById)
