@@ -17,11 +17,13 @@ app.get('/', (req, res) => {
 const aircraftRoute = require('./routes/Aircraft.route');
 const stockRoute = require('./routes/Stock.route');
 const stockHistory = require('./routes/StockHistory.route');
+const userRoute = require('./routes/User.route');
 
 
 app.use('/api/v1/aircraft', aircraftRoute);
 app.use('/api/v1/stock', stockRoute);
 app.use('/api/v1/stockHistory', stockHistory);
+app.use('/api/v1/user', userRoute);
 
 
 module.exports = app;
