@@ -8,7 +8,86 @@ exports.createNewStockService = async (data) => {
 }
 
 exports.getAllStockService = async () => {
-    const result = await Stock.find({});
+    const result = await Stock.aggregate([
+        {
+            $project: {
+                stockHistory: 1,
+                nomenclature: 1,
+                cardNo: 1,
+                unit: 1,
+                stockNo: 1
+            }
+        },
+        {
+            $lookup: {
+                from: 'stockhistories', // the collection name of stockHistory
+                localField: 'stockHistory',
+                foreignField: '_id',
+                as: 'stockHistory'
+            }
+        },
+        {
+            $unwind: {
+                path: '$stockHistory',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                'stockHistory.actionStatus': 1,
+                'stockHistory.quantity': 1,
+                'stockHistory.createdAt': 1,
+                'stockHistory.expiryDate': 1,
+                nomenclature: 1,
+                cardNo: 1,
+                unit: 1,
+                stockNo: 1
+            }
+        },
+        {
+            $group: {
+                _id: '$_id',
+                stockHistory: { $push: '$stockHistory' },
+                nomenclature: { $first: '$nomenclature' },
+                cardNo: { $first: '$cardNo' },
+                unit: { $first: '$unit' },
+                stockNo: { $first: '$stockNo' },
+                latestExpiry: {
+                    $min: '$stockHistory.expiryDate'
+                },
+                receivedQuantity: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ['$stockHistory.actionStatus', 'Received'] },
+                            '$stockHistory.quantity',
+                            0
+                        ]
+                    }
+                },
+                expendedQuantity: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ['$stockHistory.actionStatus', 'Expenditure'] },
+                            '$stockHistory.quantity',
+                            0
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                stockHistory: 1,
+                nomenclature: 1,
+                cardNo: 1,
+                unit: 1,
+                stockNo: 1,
+                latestExpiry: 1,
+                quantity: { $subtract: ['$receivedQuantity', '$expendedQuantity'] }
+            }
+        }
+
+    ]);
     return result;
 }
 
