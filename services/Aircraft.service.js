@@ -99,6 +99,6 @@ exports.getStockByAircraftIdService = async (id) => {
             }
         }
     ]);
-    console.log("stocks: ", result);
+    // console.log("stocks: ", result);
     return result;
 }

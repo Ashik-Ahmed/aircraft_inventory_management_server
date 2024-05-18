@@ -1,5 +1,5 @@
 const express = require("express");
-const { createStockHistory } = require("../controllers/StockHistory.controller");
+const { createStockHistory, deleteStockHistoryById, updateStockHistoryById } = require("../controllers/StockHistory.controller");
 
 
 const router = express.Router()
@@ -7,8 +7,9 @@ const router = express.Router()
 router.route('/')
     .post(createStockHistory)
 
-// router.route('/:stockId')
-//     .get(getStockHistoryByStockId)
+router.route('/:id')
+    .patch(updateStockHistoryById)
+    .delete(deleteStockHistoryById)
 
 
 

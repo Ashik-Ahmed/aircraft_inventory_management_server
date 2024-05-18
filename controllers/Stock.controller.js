@@ -35,7 +35,7 @@ exports.createNewStock = async (req, res) => {
 exports.getAllStock = async (req, res) => {
     try {
         const result = await getAllStockService();
-        console.log(result);
+        // console.log(result);
         if (result) {
             res.status(200).json({
                 status: "Success",
@@ -113,7 +113,7 @@ exports.updateStockById = async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
-        console.log(id, data);
+        // console.log(id, data);
         const result = await updateStockByIdService(id, data);
         // console.log(result);
         if (result) {

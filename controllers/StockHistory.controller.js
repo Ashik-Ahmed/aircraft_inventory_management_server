@@ -1,5 +1,5 @@
 const Stock = require("../models/Stock");
-const { createStockHistoryService } = require("../services/StockHistory.service")
+const { createStockHistoryService, deleteStockHistoryByIdService, updateStockHistoryByIdService } = require("../services/StockHistory.service")
 
 exports.createStockHistory = async (req, res) => {
     try {
@@ -34,4 +34,57 @@ exports.createStockHistory = async (req, res) => {
         })
     }
 
+}
+
+exports.updateStockHistoryById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        console.log(id, data);
+        const result = await updateStockHistoryByIdService(id, data);
+        if (result) {
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Internal Server Error"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
+        })
+    }
+}
+
+exports.deleteStockHistoryById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log(id);
+        const result = await deleteStockHistoryByIdService(id);
+        console.log(result);
+        if (result) {
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Internal Server Error"
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
+        })
+    }
 }

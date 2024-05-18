@@ -12,9 +12,9 @@ router.route('/')
     .get(getAllStock)
 
 router.route('/:id')
-    .delete(deleteStockById)
     .get(getStockById)
     .patch(updateStockById)
+    .delete(deleteStockById)
 
 
 module.exports = router

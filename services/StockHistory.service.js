@@ -6,3 +6,13 @@ exports.createStockHistoryService = async (data) => {
     console.log("creating stock history", result);
     return result;
 }
+
+exports.updateStockHistoryByIdService = async (id, data) => {
+    const result = await StockHistory.findByIdAndUpdate(id, data);
+    return result;
+}
+
+exports.deleteStockHistoryByIdService = async (id) => {
+    const result = await StockHistory.findByIdAndDelete(id);
+    return result;
+}
