@@ -104,13 +104,66 @@ exports.getLoggedInUser = async (req, res) => {
         const { password, ...others } = user.toObject();
 
         res.status(200).json({
-            status: 'success',
+            status: 'Success',
             user: others
         })
     } catch (error) {
         res.status(403).json({
-            status: 'failed',
+            status: 'Failed',
             error: 'Invalid Token',
+        })
+    }
+}
+
+exports.deleteUserById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await User.findByIdAndDelete(id);
+        console.log(result);
+        if (result) {
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Failed to delete user"
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
+        })
+    }
+}
+
+exports.updateUserById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        const result = await User.findByIdAndUpdate(id, data);
+        console.log(result);
+        if (result) {
+            res.status(200).json({
+                status: "Success",
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Failed to update user"
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            status: "Failed",
+            error: error.message
         })
     }
 }
