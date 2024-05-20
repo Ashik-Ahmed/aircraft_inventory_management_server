@@ -12,6 +12,11 @@ const aircraftSchema = mongoose.Schema({
         required: [true, 'Aircraft Id is required.'],
         unique: true
     },
+    cardInfo: [
+        {
+            type: Array,
+        }
+    ],
     image: {
         type: String,
         required: [true, 'Image is required.'],
