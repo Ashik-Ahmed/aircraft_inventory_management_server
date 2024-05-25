@@ -19,6 +19,7 @@ const stockRoute = require('./routes/Stock.route');
 const stockHistory = require('./routes/StockHistory.route');
 const userRoute = require('./routes/User.route');
 const cardInfoRoute = require('./routes/CardInfo.route');
+const aircraftUnit = require('./routes/AircraftUnit.route');
 
 
 app.use('/api/v1/aircraft', aircraftRoute);
@@ -26,6 +27,7 @@ app.use('/api/v1/stock', stockRoute);
 app.use('/api/v1/stockHistory', stockHistory);
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/cardInfo', cardInfoRoute);
+app.use('/api/v1/aircraftUnit', aircraftUnit);
 
 
 module.exports = app;
