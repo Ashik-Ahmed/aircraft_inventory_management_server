@@ -9,17 +9,40 @@ exports.createNewStockService = async (data) => {
 }
 
 exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
-
+    // console.log(expiryFilter);
     let matchExpiryCondition = {}; // Default to no additional match condition for 'All'
+    let matchStockStatusCondition = {};
 
-    // Get today's date at midnight for comparison
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Check if expiryFilter is defined and add conditions accordingly
+    if (expiryFilter) {
+        console.log(expiryFilter?.expiryStartDate, expiryFilter?.expiryEndDate);
+        let expiryConditions = [];
+        if (expiryFilter?.expiryStartDate) {
+            console.log("expiry start: ", expiryFilter?.expiryStartDate);
+            expiryConditions.push({ 'stockHistory.expiryDate': { $gte: new Date(expiryFilter?.expiryStartDate) } });
+        }
+        if (expiryFilter?.expiryEndDate) {
+            console.log("expiry end: ", expiryFilter?.expiryEndDate);
+            expiryConditions.push({ 'stockHistory.expiryDate': { $lte: new Date(expiryFilter?.expiryEndDate) } });
+        }
+        if (expiryConditions.length > 0) {
+            matchExpiryCondition = { $and: expiryConditions };
+        }
+    }
 
-    if (expiryFilter === 'Expired') {
-        matchExpiryCondition = { 'stockHistory.expiryDate': { $lt: today } };
-    } else if (expiryFilter === 'Not Expired') {
-        matchExpiryCondition = { 'stockHistory.expiryDate': { $gte: today } };
+    if (expiryFilter?.stockStatus == 'nill') {
+        matchStockStatusCondition = { $expr: { $lte: ['$quantity', 0] } }
+    }
+
+    if (expiryFilter?.stockStatus == 'low') {
+        matchStockStatusCondition = { $expr: { $lt: ['$quantity', 10] } };
+    }
+    if (expiryFilter?.stockStatus == 'sufficient') {
+        matchStockStatusCondition = { $expr: { $gte: ['$quantity', 10] } };
+    }
+
+    if (expiryFilter?.stockStatus == 'all') {
+        matchStockStatusCondition = {};
     }
 
     const result = await Stock.aggregate([
@@ -50,9 +73,6 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
                 path: '$stockHistory',
                 preserveNullAndEmptyArrays: true
             }
-        },
-        {
-            $match: matchExpiryCondition
         },
         {
             $project: {
@@ -107,6 +127,12 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
                 latestExpiry: 1,
                 quantity: { $subtract: ['$receivedQuantity', '$expendedQuantity'] }
             }
+        },
+        {
+            $match: matchExpiryCondition
+        },
+        {
+            $match: matchStockStatusCondition
         }
 
     ]);
