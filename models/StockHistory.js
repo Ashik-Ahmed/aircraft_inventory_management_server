@@ -9,9 +9,16 @@ const stockHistorySchema = mongoose.Schema({
         type: String,
         required: [true, 'Voucher No is missing']
     },
+    itemType: {
+        type: String,
+        required: [true, 'Item Type is missing']
+    },
     actionStatus: {
         type: String,
-        required: [true, 'Action Status is missing']
+    },
+    aircraftUnit: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'AircraftUnit'
     },
     quantity: {
         type: Number,
@@ -19,6 +26,7 @@ const stockHistorySchema = mongoose.Schema({
     },
     expiryDate: {
         type: Date,
+        required: [true, 'Expiry Date missing']
     },
     remarks: {
         type: String,
