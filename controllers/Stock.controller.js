@@ -63,7 +63,7 @@ exports.getStockById = async (req, res) => {
     try {
         const id = req.params.id;
         const result = await getStockByIdService(id);
-        // console.log(result);
+        console.log(result);
         if (result) {
             res.status(200).json({
                 status: "Success",

@@ -18,7 +18,7 @@ const stockHistorySchema = mongoose.Schema({
     },
     aircraftUnit: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'AircraftUnit'
+        ref: 'AirCraftUnit'
     },
     quantity: {
         type: Number,

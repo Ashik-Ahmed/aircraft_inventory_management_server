@@ -156,8 +156,99 @@ exports.deleteStockByIdService = async (id) => {
 
 exports.getStockByIdService = async (id) => {
     // console.log(id);
-    const result = await Stock.findById(id).populate("aircraftId", "aircraftName").populate("stockHistory");
+    const result = await Stock.findById(id)
+        .populate("aircraftId", "aircraftName")
+        .populate({
+            path: "stockHistory",
+            populate: {
+                path: "aircraftUnit",
+                model: "AirCraftUnit", // Replace with the actual name of the model
+                populate: {
+                    path: "aircraft",
+                    model: "Aircraft", // Replace with the actual name of the Aircraft model
+                    select: "aircraftName" // Only select the aircraftName field
+                }
+            }
+        });
+
+
+    // console.log(result.quantity);
     return result;
+
+    // const result = await Stock.aggregate([
+    //     { $match: { _id: new mongoose.Types.ObjectId(id) } },
+    //     {
+    //         $lookup: {
+    //             from: "aircrafts",
+    //             localField: "aircraftId",
+    //             foreignField: "_id",
+    //             as: "aircraftId"
+    //         }
+    //     },
+    //     { $unwind: "$aircraftId" },
+    //     {
+    //         $lookup: {
+    //             from: "stockhistories",
+    //             localField: "stockHistory",
+    //             foreignField: "_id",
+    //             as: "stockHistory"
+    //         }
+    //     },
+    //     {
+    //         $addFields: {
+    //             availableQuantity: {
+    //                 $subtract: [
+    //                     {
+    //                         $sum: {
+    //                             $map: {
+    //                                 input: {
+    //                                     $filter: {
+    //                                         input: "$stockHistory",
+    //                                         as: "history",
+    //                                         cond: { $eq: ["$$history.actionStatus", "Received"] }
+    //                                     }
+    //                                 },
+    //                                 as: "received",
+    //                                 in: "$$received.quantity"
+    //                             }
+    //                         }
+    //                     },
+    //                     {
+    //                         $sum: {
+    //                             $map: {
+    //                                 input: {
+    //                                     $filter: {
+    //                                         input: "$stockHistory",
+    //                                         as: "history",
+    //                                         cond: { $eq: ["$$history.actionStatus", "Expenditure"] }
+    //                                     }
+    //                                 },
+    //                                 as: "expenditure",
+    //                                 in: "$$expenditure.quantity"
+    //                             }
+    //                         }
+    //                     }
+    //                 ]
+    //             }
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             "aircraftId.aircraftName": 1,
+    //             cardNo: 1,
+    //             stockNo: 1,
+    //             unit: 1,
+    //             nomenclature: 1,
+    //             issuedAt: 1,
+    //             image: 1,
+    //             location: 1,
+    //             stockHistory: 1,
+    //             availableQuantity: 1
+    //         }
+    //     }
+    // ]);
+
+    // return result[0];
 }
 
 exports.getStockHistoryByStockIdService = async (id) => {
