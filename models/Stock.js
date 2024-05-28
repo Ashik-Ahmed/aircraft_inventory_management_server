@@ -27,6 +27,9 @@ const stockSchema = mongoose.Schema({
     issuedAt: {
         type: Date,
     },
+    minimumQuantity: {
+        type: Number,
+    },
     image: {
         type: String,
     },
