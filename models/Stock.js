@@ -44,5 +44,16 @@ const stockSchema = mongoose.Schema({
     ]
 })
 
+// Virtual field to generate full URL for the image
+stockSchema.virtual('imageUrl').get(function () {
+    if (this.image) {
+        return `${process.env.BASE_URL}${this.image}`;
+    }
+    return null;
+});
+
+stockSchema.set('toObject', { virtuals: true });
+stockSchema.set('toJSON', { virtuals: true });
+
 const Stock = mongoose.model('Stock', stockSchema);
 module.exports = Stock;
