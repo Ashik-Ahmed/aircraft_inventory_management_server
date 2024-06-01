@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Aircraft = require("../models/Aircraft");
 const { getStockByAircraftIdService } = require("./Stock.service");
+const CardInfo = require("../models/CardInfo");
 
 exports.createNewAircraftService = async (data) => {
     console.log(data);
@@ -78,6 +79,7 @@ exports.getStockByAircraftIdService = async (id) => {
                 'stocks.stockHistory': 0
             }
         },
+
         // Group to reconstruct the 'stocks' array
         {
             $group: {
@@ -85,6 +87,7 @@ exports.getStockByAircraftIdService = async (id) => {
                 aircraftName: { $first: '$aircraftName' },
                 aircraftId: { $first: '$aircraftId' },
                 image: { $first: '$image' },
+                cardInfo: { $first: '$cardInfo' },
                 // Handle the case where 'stocks' might be null after $unwind
                 stocks: {
                     $push: {
@@ -95,6 +98,46 @@ exports.getStockByAircraftIdService = async (id) => {
                         }
                     }
                 }
+            }
+        },
+
+
+        {
+            $lookup: {
+                from: 'cardinfos',
+                localField: 'cardInfo',
+                foreignField: '_id',
+                as: 'cardInfo'
+            }
+        },
+
+        // Use $unwind with 'preserveNullAndEmptyArrays' option set to true
+        { $unwind: { path: '$cardInfo', preserveNullAndEmptyArrays: true } },
+        {
+            $group: {
+                _id: '$_id',
+                aircraftName: { $first: '$aircraftName' },
+                aircraftId: { $first: '$aircraftId' },
+                image: { $first: '$image' },
+                stocks: { $first: '$stocks' }, // Make sure stocks are grouped correctly
+                cardInfo: {
+                    $push: {
+                        _id: '$cardInfo._id',
+                        cardNo: '$cardInfo.cardNo',
+                        nomenclature: '$cardInfo.nomenclature',
+                        stockNo: '$cardInfo.stockNo'
+                    }
+                } // Use $push to reconstruct the array
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                aircraftName: 1,
+                aircraftId: 1,
+                image: 1,
+                cardInfo: 1,
+                stocks: 1
             }
         }
     ]);

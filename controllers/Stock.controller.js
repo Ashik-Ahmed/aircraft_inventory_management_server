@@ -5,6 +5,8 @@ exports.createNewStock = async (req, res) => {
     try {
         const data = req.body;
         const result = await createNewStockService(data);
+
+        console.log(result);
         if (result?._id) {
 
             const pushToAircraft = await Aircraft.findByIdAndUpdate(data.aircraftId, {
@@ -25,6 +27,7 @@ exports.createNewStock = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log("Error:", error);
         res.status(500).json({
             status: "Failed",
             error: error.message

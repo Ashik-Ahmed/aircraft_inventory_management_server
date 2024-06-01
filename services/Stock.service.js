@@ -3,7 +3,7 @@ const Stock = require("../models/Stock");
 const StockHistory = require("../models/StockHistory");
 
 exports.createNewStockService = async (data) => {
-    // console.log(data);
+    console.log(data);
     const result = await Stock.create(data);
     return result;
 }

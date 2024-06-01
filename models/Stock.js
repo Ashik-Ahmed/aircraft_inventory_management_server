@@ -9,11 +9,11 @@ const stockSchema = mongoose.Schema({
     cardNo: {
         type: String,
         required: [true, 'Card No is required.'],
+        unique: true
     },
     stockNo: {
         type: String,
         required: [true, 'Stock No is required.'],
-        unique: true
     },
     unit: {
         type: String,
@@ -22,7 +22,6 @@ const stockSchema = mongoose.Schema({
     nomenclature: {
         type: String,
         required: [true, 'Nomenclature is required.'],
-        unique: true
     },
     issuedAt: {
         type: Date,
