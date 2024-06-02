@@ -37,8 +37,8 @@ exports.createNewStock = async (req, res) => {
 
 exports.getAllStockReport = async (req, res) => {
     try {
-        const aircraftId = req.query.aircraftId;
-        const expiryFilter = JSON.parse(req.query.expiryFilter);
+        const aircraftId = req?.query?.aircraftId;
+        const expiryFilter = JSON.parse(req?.query?.expiryFilter);
         console.log("expiry filter: ", expiryFilter);
         const result = await getAllStockSReportervice(aircraftId, expiryFilter);
         // console.log(result);

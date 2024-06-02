@@ -8,10 +8,10 @@ const app = require('./app');
 
 // const fs = require('fs');
 
-// fs.readFile('./fonts/Roboto-Regular.ttf', (err, data) => {
+// fs.readFile('./fonts/DejaVuSans.ttf', (err, data) => {
 //     if (err) throw err;
 //     const base64 = data.toString('base64');
-//     fs.writeFile('Roboto-Regular.js', `module.exports = "${base64}";`, (err) => {
+//     fs.writeFile('DejaVu-Sans.js', `module.exports = "${base64}";`, (err) => {
 //         if (err) throw err;
 //         console.log('Base64 string has been saved!');
 //     });

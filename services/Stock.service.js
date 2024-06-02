@@ -31,14 +31,14 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
     }
 
     if (expiryFilter?.stockStatus == 'nill') {
-        matchStockStatusCondition = { $expr: { $lte: ['$quantity', 0] } }
+        matchStockStatusCondition = { $expr: { $lte: ['$quantity', '$minimumQuantity'] } }
     }
 
     if (expiryFilter?.stockStatus == 'low') {
-        matchStockStatusCondition = { $expr: { $lt: ['$quantity', 10] } };
+        matchStockStatusCondition = { $expr: { $lt: ['$quantity', '$minimumQuantity'] } };
     }
     if (expiryFilter?.stockStatus == 'sufficient') {
-        matchStockStatusCondition = { $expr: { $gte: ['$quantity', 10] } };
+        matchStockStatusCondition = { $expr: { $gte: ['$quantity', '$minimumQuantity'] } };
     }
 
     if (expiryFilter?.stockStatus == 'all') {
@@ -53,11 +53,12 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
         },
         {
             $project: {
-                stockHistory: 1,
                 nomenclature: 1,
                 cardNo: 1,
                 unit: 1,
-                stockNo: 1
+                stockNo: 1,
+                minimumQuantity: 1,
+                stockHistory: 1,
             }
         },
         {
@@ -80,9 +81,11 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
                 'stockHistory.quantity': 1,
                 'stockHistory.createdAt': 1,
                 'stockHistory.expiryDate': 1,
+                'stockHistory.issueDate': 1,
                 nomenclature: 1,
                 cardNo: 1,
                 unit: 1,
+                minimumQuantity: 1,
                 stockNo: 1
             }
         },
@@ -94,6 +97,7 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
                 cardNo: { $first: '$cardNo' },
                 unit: { $first: '$unit' },
                 stockNo: { $first: '$stockNo' },
+                minimumQuantity: { $first: '$minimumQuantity' },
                 latestExpiry: {
                     $min: '$stockHistory.expiryDate'
                 },
@@ -125,6 +129,7 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
                 unit: 1,
                 stockNo: 1,
                 latestExpiry: 1,
+                minimumQuantity: 1,
                 quantity: { $subtract: ['$receivedQuantity', '$expendedQuantity'] }
             }
         },
