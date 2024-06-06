@@ -3,12 +3,14 @@ const CardInfo = require('./models/CardInfo');
 const Stock = require('./models/Stock');
 
 const dropIndex = async () => {
-    await mongoose.connect('mongodb+srv://bdarmy:bdarmy_121@cluster0.2aahg01.mongodb.net/aircraft_inventory?retryWrites=true&w=majority', {
+    await mongoose.connect('mongodb://127.0.0.1:27017/aircraft_inventory', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
 
-    await Stock.collection.dropIndex('nomenclature_1');  // Adjust 'cardNo_1' to your specific index name
+    await CardInfo.collection.dropIndex('cardNo_1');
+    await Stock.collection.dropIndex('stockNo_1');
+    await Stock.collection.dropIndex('nomenclature');
 
     console.log('Index dropped');
     mongoose.connection.close();
