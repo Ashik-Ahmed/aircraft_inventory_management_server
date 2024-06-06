@@ -4,7 +4,6 @@ const cardInfoSchema = mongoose.Schema({
     cardNo: {
         type: String,
         required: [true, 'Card No is required.'],
-        unique: true
     },
     aircraft: {
         type: mongoose.Schema.Types.ObjectId,

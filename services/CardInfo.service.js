@@ -3,6 +3,7 @@ const CardInfo = require("../models/CardInfo");
 
 exports.createCardInfoService = async (data) => {
     const result = await CardInfo.create(data);
+    console.log("result: ", result);
     return result;
 }
 

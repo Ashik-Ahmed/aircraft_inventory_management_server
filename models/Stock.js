@@ -9,7 +9,6 @@ const stockSchema = mongoose.Schema({
     cardNo: {
         type: String,
         required: [true, 'Card No is required.'],
-        unique: true
     },
     stockNo: {
         type: String,
