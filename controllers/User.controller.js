@@ -1,5 +1,6 @@
+const { default: mongoose } = require("mongoose");
 const User = require("../models/User");
-const { createUserService, getAllUserService } = require("../services/User.service");
+const { createUserService, getAllUserService, updateUserPasswordByIdService } = require("../services/User.service");
 const { generateToken } = require("../utils/token");
 
 exports.createUser = async (req, res) => {
@@ -164,6 +165,61 @@ exports.updateUserById = async (req, res) => {
         res.status(500).json({
             status: "Failed",
             error: error.message
+        })
+    }
+}
+
+// update user password 
+exports.updateEmployeePasswordById = async (req, res) => {
+    try {
+        const id = req.params;
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+
+        console.log(id, currentPassword, newPassword, confirmPassword);
+
+        //compare new passwords
+        if (newPassword !== confirmPassword) {
+            return res.status(500).json({
+                status: 'Failed',
+                error: "New password didn't match"
+            })
+        }
+        if (newPassword.length < 6) {
+            return res.status(401).json({
+                status: "Failed",
+                error: "New Password too short"
+            })
+        }
+
+        const user = await User.findOne({ _id: new mongoose.Types.ObjectId(id) });
+
+        const isPasswordMatched = user.comparePassword(currentPassword, user.password);
+        if (!isPasswordMatched) {
+            return res.status(402).json({
+                status: 'Failed',
+                error: "Current password is wrong"
+            })
+        }
+
+        const result = await updateUserPasswordByIdService(id, req.body.newPassword);
+
+        if (result.modifiedCount > 0) {
+            return res.status(200).json({
+                status: 'Success',
+                data: result
+            })
+        }
+        else {
+            res.status(400).json({
+                status: "Failed",
+                error: "Please try again"
+            })
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            status: 'Failed',
+            error: error.message,
         })
     }
 }
