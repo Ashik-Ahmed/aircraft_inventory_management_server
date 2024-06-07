@@ -15,3 +15,13 @@ exports.getAllCardService = async (aircraftId) => {
     const result = await CardInfo.find(query).populate("aircraft", "aircraftName");
     return result;
 }
+
+exports.updateCardInfoByIdService = async (id, data) => {
+    const result = await CardInfo.findByIdAndUpdate(id, data);
+    return result;
+}
+
+exports.deleteCardInfoByIdService = async (id) => {
+    const result = await CardInfo.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
+    return result;
+}
