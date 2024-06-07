@@ -38,7 +38,9 @@ exports.createCardInfo = async (req, res) => {
 
 exports.getAllCard = async (req, res) => {
     try {
-        const result = await getAllCardService();
+        const aircraftId = req.query.aircraftId;
+        console.log(aircraftId);
+        const result = await getAllCardService(aircraftId);
         if (result) {
             res.status(200).json({
                 status: "Success",
