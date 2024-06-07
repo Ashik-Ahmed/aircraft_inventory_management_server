@@ -175,7 +175,7 @@ exports.updateEmployeePasswordById = async (req, res) => {
         const id = req.params;
         const { currentPassword, newPassword, confirmPassword } = req.body;
 
-        console.log(id, currentPassword, newPassword, confirmPassword);
+        // console.log(id, currentPassword, newPassword, confirmPassword);
 
         //compare new passwords
         if (newPassword !== confirmPassword) {
