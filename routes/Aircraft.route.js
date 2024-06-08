@@ -1,5 +1,7 @@
 const express = require("express");
 const { createNewAircraft, getAllAircraft, getAircraftById, updateAircraftById, getStockByAircraftId } = require("../controllers/Aircraft.controller");
+const verifyToken = require("../middlewares/verifyToken");
+const authorization = require("../middlewares/authorization");
 
 const router = express.Router();
 
@@ -8,7 +10,7 @@ router.route('/stocks/:id')
 
 router.route('/')
     .get(getAllAircraft)
-    .post(createNewAircraft);
+    .post(verifyToken, authorization('Admin'), createNewAircraft);
 
 router.route('/:id')
     .get(getAircraftById)

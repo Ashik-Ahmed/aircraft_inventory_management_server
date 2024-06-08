@@ -50,5 +50,16 @@ userSchema.methods.comparePassword = function (password, hash) {
     return isPasswordMatched;
 }
 
+// Virtual field to generate full URL for the image
+userSchema.virtual('imageUrl').get(function () {
+    if (this.photo) {
+        return `${process.env.BASE_URL}${this.photo}`;
+    }
+    return null;
+});
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+
 const User = mongoose.model('User', userSchema);
 module.exports = User
