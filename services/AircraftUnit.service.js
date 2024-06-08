@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const AirCraftUnit = require("../models/AircraftUnit");
 
 exports.createAircraftUnitService = async (data) => {
@@ -21,5 +22,16 @@ exports.getAllAircraftUnitService = async () => {
 
 exports.getAircraftUnitByIdService = async (id) => {
     const result = await AirCraftUnit.findById(id);
+    return result;
+}
+
+exports.updateAircraftUnitByIdService = async (id, data) => {
+    const result = await AirCraftUnit.updateOne({ _id: new mongoose.Types.ObjectId(id) }, data);
+    return result;
+}
+
+
+exports.deleteAircraftUnitByIdService = async (id) => {
+    const result = await AirCraftUnit.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
     return result;
 }
