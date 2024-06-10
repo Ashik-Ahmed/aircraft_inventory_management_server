@@ -8,9 +8,10 @@ const dropIndex = async () => {
         useUnifiedTopology: true,
     });
 
-    await CardInfo.collection.dropIndex('cardNo_1');
-    await Stock.collection.dropIndex('stockNo_1');
-    await Stock.collection.dropIndex('nomenclature');
+    // await CardInfo.collection.dropIndex('cardNo_1');
+    // await Stock.collection.dropIndex('stockNo_1');
+    // await Stock.collection.dropIndex('nomenclature_1');
+    await Stock.collection.dropIndex('cardNo_1');
 
     console.log('Index dropped');
     mongoose.connection.close();

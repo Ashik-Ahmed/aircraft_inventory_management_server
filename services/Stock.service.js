@@ -31,7 +31,7 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
     }
 
     if (expiryFilter?.stockStatus == 'nill') {
-        matchStockStatusCondition = { $expr: { $lte: ['$quantity', '$minimumQuantity'] } }
+        matchStockStatusCondition = { $expr: { $lte: ['$quantity', 0] } }
     }
 
     if (expiryFilter?.stockStatus == 'low') {
@@ -138,6 +138,11 @@ exports.getAllStockSReportervice = async (aircraftId, expiryFilter) => {
         },
         {
             $match: matchStockStatusCondition
+        },
+        {
+            $sort: {
+                cardNo: 1
+            }
         }
 
     ]);
