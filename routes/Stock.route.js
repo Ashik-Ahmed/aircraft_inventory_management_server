@@ -4,8 +4,6 @@ const { createNewStock, deleteStockById, getStockById, getStockHistoryByStockId,
 
 const router = express.Router();
 
-router.route('/stockHistory/:stockId')
-    .get(getStockHistoryByStockId)
 
 router.route('/')
     .post(createNewStock)

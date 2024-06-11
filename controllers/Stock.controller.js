@@ -1,5 +1,5 @@
 const Aircraft = require("../models/Aircraft");
-const { createNewStockService, deleteStockByIdService, getStockByIdService, getStockHistoryByStockIdService, updateStockByIdService, getAllStockSReportervice } = require("../services/Stock.service");
+const { createNewStockService, deleteStockByIdService, getStockByIdService, updateStockByIdService, getAllStockSReportervice } = require("../services/Stock.service");
 
 exports.createNewStock = async (req, res) => {
     try {
@@ -67,26 +67,26 @@ exports.getStockById = async (req, res) => {
         // console.log("params and query");
         // console.log(req.params.id, req.query);
         const id = req.params.id;
-        const { issueStartDateString, issueEndDateString } = req.query;
+        // const { issueStartDateString, issueEndDateString } = req.query;
 
-        let issueStartDate = null;
-        let issueEndDate = null;
+        // let issueStartDate = null;
+        // let issueEndDate = null;
 
-        if (issueStartDateString) {
-            const parsedStartDate = new Date(issueStartDateString);
-            if (!isNaN(parsedStartDate)) { // Check if the date is valid
-                issueStartDate = parsedStartDate.toISOString();
-            }
-        }
+        // if (issueStartDateString) {
+        //     const parsedStartDate = new Date(issueStartDateString);
+        //     if (!isNaN(parsedStartDate)) { // Check if the date is valid
+        //         issueStartDate = parsedStartDate.toISOString();
+        //     }
+        // }
 
-        if (issueEndDateString) {
-            const parsedEndDate = new Date(issueEndDateString);
-            if (!isNaN(parsedEndDate)) { // Check if the date is valid
-                issueEndDate = parsedEndDate.toISOString();
-            }
-        }
+        // if (issueEndDateString) {
+        //     const parsedEndDate = new Date(issueEndDateString);
+        //     if (!isNaN(parsedEndDate)) { // Check if the date is valid
+        //         issueEndDate = parsedEndDate.toISOString();
+        //     }
+        // }
 
-        const result = await getStockByIdService(id, issueStartDate, issueEndDate);
+        const result = await getStockByIdService(id);
         // console.log(req.params.id, req.query);
 
         if (result) {
@@ -110,33 +110,6 @@ exports.getStockById = async (req, res) => {
     }
 }
 
-
-exports.getStockHistoryByStockId = async (req, res) => {
-    try {
-        const stockId = req.params.stockId;
-        // console.log(stockId);
-        const stockHistory = await getStockHistoryByStockIdService(stockId);
-
-        if (stockHistory) {
-            res.status(200).json({
-                status: "Success",
-                data: stockHistory
-            })
-        }
-        else {
-            res.status(400).json({
-                status: "Failed",
-                error: "No Stock History Found"
-            })
-        }
-
-    } catch (error) {
-        res.status(500).json({
-            status: "Failed",
-            error: error.message
-        })
-    }
-}
 
 exports.updateStockById = async (req, res) => {
     try {

@@ -1,8 +1,12 @@
 const express = require("express");
-const { createStockHistory, deleteStockHistoryById, updateStockHistoryById } = require("../controllers/StockHistory.controller");
+const { createStockHistory, deleteStockHistoryById, updateStockHistoryById, getStockHistoryByStockId } = require("../controllers/StockHistory.controller");
 
 
 const router = express.Router()
+
+
+router.route('/detailsHistory/:stockId')
+    .get(getStockHistoryByStockId)
 
 router.route('/')
     .post(createStockHistory)
