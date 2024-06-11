@@ -64,9 +64,31 @@ exports.getAllStockReport = async (req, res) => {
 
 exports.getStockById = async (req, res) => {
     try {
+        // console.log("params and query");
+        // console.log(req.params.id, req.query);
         const id = req.params.id;
-        const result = await getStockByIdService(id);
-        console.log(result);
+        const { issueStartDateString, issueEndDateString } = req.query;
+
+        let issueStartDate = null;
+        let issueEndDate = null;
+
+        if (issueStartDateString) {
+            const parsedStartDate = new Date(issueStartDateString);
+            if (!isNaN(parsedStartDate)) { // Check if the date is valid
+                issueStartDate = parsedStartDate.toISOString();
+            }
+        }
+
+        if (issueEndDateString) {
+            const parsedEndDate = new Date(issueEndDateString);
+            if (!isNaN(parsedEndDate)) { // Check if the date is valid
+                issueEndDate = parsedEndDate.toISOString();
+            }
+        }
+
+        const result = await getStockByIdService(id, issueStartDate, issueEndDate);
+        // console.log(req.params.id, req.query);
+
         if (result) {
             res.status(200).json({
                 status: "Success",
@@ -80,6 +102,7 @@ exports.getStockById = async (req, res) => {
             })
         }
     } catch (error) {
+        console.log("Error:", error);
         res.status(500).json({
             status: "Failed",
             error: error.message

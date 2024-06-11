@@ -164,12 +164,28 @@ exports.deleteStockByIdService = async (id) => {
     return result;
 }
 
-exports.getStockByIdService = async (id) => {
-    // console.log(id);
+exports.getStockByIdService = async (id, issueStartDate, issueEndDate) => {
+
+
+    console.log(id, issueStartDate, issueEndDate);
+    let matchCondition = {};
+
+    // Add conditions to the matchCondition only if startDate and endDate are provided
+    if (issueStartDate && issueEndDate) {
+        matchCondition.issueDate = { $gte: issueStartDate, $lte: issueEndDate };
+    } else if (issueStartDate) {
+        // Only a start date is provided
+        matchCondition.issueDate = { $gte: issueStartDate };
+    } else if (issueEndDate) {
+        // Only an end date is provided
+        matchCondition.issueDate = { $lte: issueEndDate };
+    }
+    console.log("matchCondition:--", matchCondition);
     const result = await Stock.findById(id)
         .populate("aircraftId", "aircraftName")
         .populate({
             path: "stockHistory",
+            match: matchCondition,
             populate: {
                 path: "aircraftUnit",
                 model: "AirCraftUnit", // Replace with the actual name of the model
@@ -182,7 +198,7 @@ exports.getStockByIdService = async (id) => {
         });
 
 
-    // console.log(result.quantity);
+    console.log("result:--", result);
     return result;
 
     // const result = await Stock.aggregate([
