@@ -53,5 +53,8 @@ stockSchema.virtual('imageUrl').get(function () {
 stockSchema.set('toObject', { virtuals: true });
 stockSchema.set('toJSON', { virtuals: true });
 
+// Compound unique index to ensure cardNo is unique for each aircraftId
+stockSchema.index({ aircraftId: 1, cardNo: 1 }, { unique: true });
+
 const Stock = mongoose.model('Stock', stockSchema);
 module.exports = Stock;
